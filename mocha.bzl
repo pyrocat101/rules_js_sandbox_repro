@@ -19,8 +19,6 @@ def mocha_test(name, tests, args = [], data = [], env = {}, **kwargs):
         ],
         env = env | {
             "MOCHA_FILE": "$$XML_OUTPUT_FILE",
-            # Put our PWD first so we can avoid so many useless syscalls and optimally look up first-party code.
-            "NODE_PATH": "$$PWD",
         },
         **kwargs
     )
