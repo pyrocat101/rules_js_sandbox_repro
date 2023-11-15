@@ -1,0 +1,12 @@
+load("//:mocha.bzl", "mocha_test")
+
+# This should throw
+mocha_test(
+    name = "repro_test",
+    data = [
+        ":test.js",
+    ],
+    tests = [
+        "test.js",
+    ],
+)

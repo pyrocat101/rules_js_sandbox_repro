@@ -1,0 +1,38 @@
+diff --git a/toolchain/cc_toolchain_config.bzl b/toolchain/cc_toolchain_config.bzl
+index 3dd83dc..5381926 100644
+--- a/toolchain/cc_toolchain_config.bzl
++++ b/toolchain/cc_toolchain_config.bzl
+@@ -223,9 +223,9 @@ def cc_toolchain_config(
+             # libomp.dylib, which adds this directory to the search path, and would
+             # (unintentionally) lead to static linking of libraries from the
+             # toolchain.
+-            link_flags.extend([
+-                "-L{}lib".format(toolchain_path_prefix),
+-            ])
++            #link_flags.extend([
++            #    "-L{}lib".format(toolchain_path_prefix),
++            #])
+     elif stdlib == "libc++":
+         cxx_flags = [
+             "-std=" + cxx_standard,
+diff --git a/toolchain/BUILD.llvm_repo b/toolchain/BUILD.llvm_repo
+index 31eac02..1c88099 100644
+--- a/toolchain/BUILD.llvm_repo
++++ b/toolchain/BUILD.llvm_repo
+@@ -19,7 +19,7 @@ exports_files(glob([
+     "bin/*",
+     "lib/*",
+     "include/*",
+-]))
++], allow_empty = True))
+ 
+ ## LLVM toolchain files
+ 
+@@ -66,6 +66,7 @@ filegroup(
+             "lib/libclang*.a",
+             "lib/liblld*.a",
+         ],
++        allow_empty = True,
+     ),
+     # Do not include the .dylib files in the linker sandbox because they will
+     # not be available at runtime. Any library linked from the toolchain should

@@ -1,0 +1,38 @@
+bazel_dep(name = "rules_oci", version = "1.3.2")
+
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+
+oci.pull(
+    name = "ubuntu_image",
+    digest = "sha256:c6871ae8b54fb3ed0ba4df4eb98527e9a6692088fe0c2f2260a9334853092b47",
+    image = "public.ecr.aws/ubuntu/ubuntu",
+    platforms = [
+        "linux/arm64/v8",
+        "linux/amd64",
+    ],
+)
+use_repo(oci, "ubuntu_image")
+
+bazel_dep(name = "rules_nodejs", version = "6.0.2")
+bazel_dep(name = "aspect_rules_js", version = "1.33.1")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(node_version = "18.16.0")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "npm",
+    no_optional = True,
+    patch_args = {"*": ["-p1"]},
+    pnpm_lock = "//:pnpm-lock.yaml",
+    run_lifecycle_hooks = False,
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+use_repo(npm, "npm")
+
+# Workaround
+# use_repo(node, "nodejs_toolchains")
+# register_toolchains(
+#     "@nodejs_toolchains//:linux_arm64_toolchain_target", 
+#     "@nodejs_toolchains//:linux_amd64_toolchain_target", 
+# )
